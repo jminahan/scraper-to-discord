@@ -1,8 +1,11 @@
-from impl.pineandroses_scraper import PineAndRosesScraper
+from src.Implementations.pineandroses_scraper import PineAndRosesScraper
+
+##Util Object
+from src.Implementations.articleformfactory import ArticleFormFactory
+from src.Implementations.simplefile_databaseimplementation import SimpleFileDatabase
 
 ##Configs
-from impl.pineandroses_config import PineAndRosesConfig
-
+from src.Implementations.pineandroses_config import PineAndRosesConfig
 
 def initializeConfigs():
     configs = {
@@ -10,13 +13,23 @@ def initializeConfigs():
     }
     return configs
 
+def initializeArticalGenerator():
+    art_generator = ArticleFormFactory()
+    return art_generator
+
+def initializeDatabase():
+    database = SimpleFileDatabase("./test.json")
+    return database
 
 
 def main():
     configs = initializeConfigs()
-
+    art_generator = initializeArticalGenerator()
+    database = initializeDatabase()
     scraper = PineAndRosesScraper(configs["pr"])
-    print(scraper.scrape())
+    art = art_generator.textContentToArticle(scraper.scrape()[0])
+    database.putArticle(configs["pr"], art)
+    
 
 
 main()
